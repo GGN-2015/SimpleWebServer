@@ -14,14 +14,16 @@ def get_return_message(client):
         return content_type, bytes_message
     except:
         importlib.reload(config) # 使用 config 中的值动态决定是否需要输出错误信息
-        bytes_message = "<p>Error</p>"
+        bytes_message = "<meta charset='utf-8'/>"
+        bytes_message += "<h1>Error, Please contact the Admin.</h1>"
         if config.debug:
             bytes_message += "<p>"
-            bytes_message += html.escape(traceback.format_exc().replace('\t', " " * 4)).replace('\n', "<br>")
+            bytes_message += html.escape(traceback.format_exc()).replace('    ', "&nbsp;" * 4).replace('\n', "<br>")
             bytes_message += "</p>"
             bytes_message += "<p>use 'config.debug = False' to disable the error message!</p>"
             # 使用 html.escape 来生成转义字符
             # 使用 html.unescape 来消除转义字符
+        print(bytes_message) # 输出报错信息
         return 'text/html', bytes_message.encode('utf-8') # 返回错误信息
 
 class MyServer(BaseHTTPRequestHandler):
